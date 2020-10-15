@@ -1,8 +1,7 @@
-//
-// This is only a SKELETON file for the 'Wordy' exercise. It's been provided as a
-// convenience to get you started writing code faster.
-//
-
-export const answer = () => {
-  throw new Error("Remove this statement and implement this function");
+export const answer = (question = "") => {
+  const { groups } = question.match(/What is (?<number>\d*)\?/);
+  if (groups.number) {
+    return Number(groups.number);
+  }
+  throw new Error("Not yet implemented");
 };
