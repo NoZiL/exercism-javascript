@@ -61,13 +61,13 @@ describe("Wordy", () => {
     expect(answer("What is -12 divided by 2 divided by -3?")).toEqual(2);
   });
 
-  xtest("unknown operation", () => {
+  test("unknown operation", () => {
     expect(() => answer("What is 52 cubed?")).toThrow(
       new Error("Unknown operation")
     );
   });
 
-  xtest("Non math question", () => {
+  test("Non math question", () => {
     expect(() => answer("Who is the President of the United States?")).toThrow(
       new Error("Unknown operation")
     );

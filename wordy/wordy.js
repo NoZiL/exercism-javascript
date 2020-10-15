@@ -1,23 +1,22 @@
-const regex = /What is (?<number>-?\d*)(\s(?<operation>.*)\s(?<number2>-?\d*))?\?/;
+const regex = /What is (?<number>-?\d*)(?<operation> (?<operator>[a-z| ]+)( (?<operand>-?\d*))?)*\?/;
 
 export const answer = (question = "") => {
-  const { groups } = question.match(regex);
-  const { number, operation, number2 } = groups;
+  const { groups } = question.match(regex) || {};
+  const { number, operation, operator, operand } = groups || {};
   switch (true) {
-    default:
     case !number:
-      return null;
-    case !operation:
-      return Number(number);
-    case operation === "plus":
-      return Number(number) + Number(number2);
-    case operation === "minus":
-      return Number(number) - Number(number2);
-    case operation === "multiplied by":
-      return Number(number) * Number(number2);
-    case operation === "divided by":
-      return Number(number) / Number(number2);
-    case !!operation:
+    case number && operation && !operator:
+    default:
       throw new Error("Unknown operation");
+    case number && !operation:
+      return Number(number);
+    case operator === "plus":
+      return Number(number) + Number(operand);
+    case operator === "minus":
+      return Number(number) - Number(operand);
+    case operator === "multiplied by":
+      return Number(number) * Number(operand);
+    case operator === "divided by":
+      return Number(number) / Number(operand);
   }
 };
