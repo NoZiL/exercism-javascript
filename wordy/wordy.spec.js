@@ -33,41 +33,41 @@ describe("Wordy", () => {
     expect(answer("What is 33 divided by -3?")).toEqual(-11);
   });
 
-  xtest("multiple additions", () => {
+  test("multiple additions", () => {
     expect(answer("What is 1 plus 1 plus 1?")).toEqual(3);
   });
 
-  xtest("addition and subtraction", () => {
+  test("addition and subtraction", () => {
     expect(answer("What is 1 plus 5 minus -2?")).toEqual(8);
   });
 
-  xtest("multiple subtraction", () => {
+  test("multiple subtraction", () => {
     expect(answer("What is 20 minus 4 minus 13?")).toEqual(3);
   });
 
-  xtest("subtraction then addition", () => {
+  test("subtraction then addition", () => {
     expect(answer("What is 17 minus 6 plus 3?")).toEqual(14);
   });
 
-  xtest("multiple multiplication", () => {
+  test("multiple multiplication", () => {
     expect(answer("What is 2 multiplied by -2 multiplied by 3?")).toEqual(-12);
   });
 
-  xtest("addition and multiplication", () => {
+  test("addition and multiplication", () => {
     expect(answer("What is -3 plus 7 multiplied by -2?")).toEqual(-8);
   });
 
-  xtest("multiple division", () => {
+  test("multiple division", () => {
     expect(answer("What is -12 divided by 2 divided by -3?")).toEqual(2);
   });
 
-  test("unknown operation", () => {
+  xtest("unknown operation", () => {
     expect(() => answer("What is 52 cubed?")).toThrow(
       new Error("Unknown operation")
     );
   });
 
-  test("Non math question", () => {
+  xtest("Non math question", () => {
     expect(() => answer("Who is the President of the United States?")).toThrow(
       new Error("Unknown operation")
     );
