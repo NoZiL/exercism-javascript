@@ -1,12 +1,16 @@
 {
-	"folders": [
-		{
-			"name": "root",
-			"path": "."
-		},
-		{
-			"path": "wordy"
-		}
-	],
-	"settings": {}
+    "folders": [
+        {
+            "name": "root",
+            "path": "."
+        },
+        {
+            "path": "wordy"
+        }
+    ],
+    "settings": {
+        "npm.packageManager": "yarn",
+        "prettier.packageManager": "yarn",
+        "eslint.packageManager": "yarn",
+    }
 }
