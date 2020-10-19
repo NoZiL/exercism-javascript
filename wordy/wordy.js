@@ -1,56 +1,55 @@
-const regex1 = /What is (?<number>-?\d*)(?<operation> (?<operator>[a-z| ]+)( (?<operand>-?\d*))?)*\?/;
-
-export const answer1 = (question = "") => {
-  const { groups } = question.match(regex1) || {};
-  const { number, operation, operator, operand } = groups || {};
-  switch (true) {
-    case !number:
-    case number && operation && !operator:
-    default:
-      throw new Error("Unknown operation");
-    case number && !operation:
-      return Number(number);
-    case operator === "plus":
-      return Number(number) + Number(operand);
-    case operator === "minus":
-      return Number(number) - Number(operand);
-    case operator === "multiplied by":
-      return Number(number) * Number(operand);
-    case operator === "divided by":
-      return Number(number) / Number(operand);
-  }
-};
-
-const regex = /What is (?<operations>.*)+\?/;
+const regex = /What is(?<operations>.*)+\?/;
 
 export function answer(question = "") {
   const match = question.match(regex);
-  const operations = match?.groups?.operations
-    .split(" ")
-    .map(parseNumbers)
-    .reduce(calculate, [0, "plus"]);
-  return operations[0];
-}
-
-function parseNumbers(string) {
-  const number = Number.parseInt(string);
-  return isNaN(number) ? string : number;
-}
-
-function calculate([result, operation], v) {
-  if (typeof v === "string") {
-    return [result, [operation, v].filter((e) => e).join(" ")];
+  if (!match) {
+    throw new Error("Unknown operation");
   }
-  switch (operation) {
-    case "plus":
-      return [result + v, null];
-    case "minus":
-      return [result - v, null];
-    case "multiplied by":
-      return [result * v, null];
-    case "divided by":
-      return [result / v, null];
+  if (!match.groups.operations) {
+    throw new Error("Syntax error");
+  }
+  const operations = match?.groups?.operations.trim().split(" ");
+  return calculate(operations);
+}
+
+function calculate(operations = [], acc = null) {
+  const [head, ...tail] = operations;
+  if (operations.length <= 0) return acc;
+  const numberValue = Number.parseInt(head);
+  switch (true) {
+    case !isNaN(numberValue) && acc === null:
+      return calculate(tail, numberValue);
+    case !isNaN(numberValue) && acc !== null:
+      throw new Error("Syntax error");
+    case head === "plus":
+      return calculate(
+        tail.slice(1),
+        calculateOne((a, b) => a + b, acc, tail[0])
+      );
+    case head === "minus":
+      return calculate(
+        tail.slice(1),
+        calculateOne((a, b) => a - b, acc, tail[0])
+      );
+    case head === "multiplied" && tail[0] === "by":
+      return calculate(
+        tail.slice(2),
+        calculateOne((a, b) => a * b, acc, tail[1])
+      );
+    case head === "divided" && tail[0] === "by":
+      return calculate(
+        tail.slice(2),
+        calculateOne((a, b) => a / b, acc, tail[1])
+      );
     default:
       throw new Error("Unknown operation");
   }
+}
+
+function calculateOne(operation, ...args) {
+  const parsedIntArgs = args.map((e) => Number.parseInt(e));
+  if (parsedIntArgs.some((e) => typeof e !== "number" || isNaN(e))) {
+    throw new Error("Syntax error");
+  }
+  return operation(...parsedIntArgs);
 }
