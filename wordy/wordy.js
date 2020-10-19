@@ -1,4 +1,11 @@
-const regex = /What is(?<operations>.*)+\?/;
+const regex = /What is(?<operations>.*)\?/;
+
+const OPERATIONS = {
+  plus: (a, b) => a + b,
+  minus: (a, b) => a - b,
+  "multiplied by": (a, b) => a * b,
+  "divided by": (a, b) => a / b,
+};
 
 export function answer(question = "") {
   const match = question.match(regex);
@@ -8,7 +15,7 @@ export function answer(question = "") {
   if (!match.groups.operations) {
     throw new Error("Syntax error");
   }
-  const operations = match?.groups?.operations.trim().split(" ");
+  const operations = match.groups.operations.trim().split(/\s(?!by)/);
   return calculate(operations);
 }
 
@@ -21,25 +28,10 @@ function calculate(operations = [], acc = null) {
       return calculate(tail, numberValue);
     case !isNaN(numberValue) && acc !== null:
       throw new Error("Syntax error");
-    case head === "plus":
+    case Object.keys(OPERATIONS).includes(head):
       return calculate(
         tail.slice(1),
-        calculateOne((a, b) => a + b, acc, tail[0])
-      );
-    case head === "minus":
-      return calculate(
-        tail.slice(1),
-        calculateOne((a, b) => a - b, acc, tail[0])
-      );
-    case head === "multiplied" && tail[0] === "by":
-      return calculate(
-        tail.slice(2),
-        calculateOne((a, b) => a * b, acc, tail[1])
-      );
-    case head === "divided" && tail[0] === "by":
-      return calculate(
-        tail.slice(2),
-        calculateOne((a, b) => a / b, acc, tail[1])
+        calculateOne(OPERATIONS[head], acc, tail[0])
       );
     default:
       throw new Error("Unknown operation");
