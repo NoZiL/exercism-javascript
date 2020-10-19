@@ -1,3 +1,5 @@
+import { parse } from "path";
+
 const OPERATIONS = {
   "What is": (_, b) => b,
   plus: (a, b) => a + b,
@@ -14,29 +16,31 @@ export function answer(question = "") {
       .match(questionRegex)
       .groups.question.trim()
       .split(/\s(?!by|is)/)
+      .map((e) => {
+        const parsed = Number.parseInt(e);
+        return isNaN(parsed) ? e : parsed;
+      })
   );
 }
 
 function calculate([head, ...tail], acc = 0) {
+  const existingOperation = Object.keys(OPERATIONS).includes(head);
+  const nextOperationIndex = tail.findIndex((e) => typeof e !== "number");
+  const sliceIndex = nextOperationIndex < 0 ? tail.length : nextOperationIndex;
+  const nextNumbers = tail.slice(0, sliceIndex);
+  const hasCorrectArity = OPERATIONS[head]?.length - 1 === nextNumbers.length;
+
   switch (true) {
     case !head:
       return acc;
-    case Object.keys(OPERATIONS).includes(head):
+    case existingOperation && hasCorrectArity:
       return calculate(
-        tail.slice(1),
-        calculateOne(OPERATIONS[head], acc, tail[0])
+        tail.slice(sliceIndex),
+        OPERATIONS[head](acc, ...nextNumbers)
       );
-    case !isNaN(Number.parseInt(head)):
+    case existingOperation:
       throw new Error("Syntax error");
     default:
       throw new Error("Unknown operation");
   }
-}
-
-function calculateOne(operation, ...args) {
-  const parsedIntArgs = args.map((e) => Number.parseInt(e));
-  if (parsedIntArgs.some((e) => typeof e !== "number" || isNaN(e))) {
-    throw new Error("Syntax error");
-  }
-  return operation(...parsedIntArgs);
 }
