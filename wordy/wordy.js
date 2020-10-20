@@ -1,5 +1,3 @@
-import { parse } from "path";
-
 const OPERATIONS = {
   "What is": (_, b) => b,
   plus: (a, b) => a + b,
