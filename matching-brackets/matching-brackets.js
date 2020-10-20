@@ -8,7 +8,7 @@ const OPENING_BRACKETS = Object.keys(BRACKETS_PAIRS);
 
 const CLOSING_BRACKETS = Object.values(BRACKETS_PAIRS);
 
-export function isPaired(string) {
+export function isPaired(string = "") {
   try {
     return string.split("").reduce(readChar, []).length === 0;
   } catch (error) {
@@ -16,7 +16,7 @@ export function isPaired(string) {
   }
 }
 
-const readChar = (bracketsBuffer, currentCharacter) => {
+const readChar = (bracketsBuffer = [], currentCharacter = "") => {
   switch (true) {
     case bracketsBuffer[0] === currentCharacter:
       return bracketsBuffer.slice(1);
