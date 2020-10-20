@@ -41,4 +41,16 @@ describe("Resistor Color Trio", () => {
       () => new ResistorColorTrio(["yellow", "purple", "black"]).label
     ).toThrowError(/invalid color/);
   });
+
+  test("Red and brown and blue", () => {
+    expect(new ResistorColorTrio(["red", "brown", "blue"]).label).toEqual(
+      makeLabel({ value: 21, unit: "megaohms" })
+    );
+  });
+
+  test("White and white and white", () => {
+    expect(new ResistorColorTrio(["white", "white", "white"]).label).toEqual(
+      makeLabel({ value: 99, unit: "gigaohms" })
+    );
+  });
 });

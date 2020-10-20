@@ -26,11 +26,15 @@ export class ResistorColorTrio {
   }
 }
 
+const MULTIPLES = {
+  1_000: "kilo",
+  1_000_000: "mega",
+  1_000_000_000: "giga",
+};
+
 function labelUnit(value = 0, unit = "") {
-  switch (true) {
-    case value >= 1_000:
-      return `${value / 1_000} kilo${unit}`;
-    default:
-      return `${value} ${unit}`;
-  }
+  const multiple = Object.keys(MULTIPLES)
+    .reverse()
+    .find((e) => value >= e);
+  return `${value / (multiple ?? 1)} ${MULTIPLES[multiple] ?? ""}${unit}`;
 }
