@@ -1,4 +1,4 @@
-const mapPlanetYearsToEarthYear = {
+const earthYearsToPlanetYears = {
   earth: 1,
   mercury: 0.2408467,
   venus: 0.61519726,
@@ -7,12 +7,20 @@ const mapPlanetYearsToEarthYear = {
   saturn: 29.447498,
   uranus: 84.016846,
   neptune: 164.79132,
+};
+
+export function age(planet = "earth", ageInSeconds = 0) {
+  return round(ageInPlanetYears(planet, ageInSeconds), 2);
 }
 
-const ageInEarthYears = (ageInSeconds) => ageInSeconds / 60 / 60 / 24 / 365.25
+function round(value, decimal) {
+  return Math.round(value * Math.pow(10, decimal)) / Math.pow(10, decimal);
+}
 
-const exactAgeInPlanetYears = (planet, ageInSeconds) => ageInEarthYears(ageInSeconds) / mapPlanetYearsToEarthYear[planet]
+function ageInEarthYears(ageInSeconds = 0) {
+  return ageInSeconds / 60 / 60 / 24 / 365.25;
+}
 
-const roundDecimal = (val, digit) => Math.round(val * Math.pow(10, digit)) / Math.pow(10, digit)
-
-export const age = (planet, ageInSeconds) => roundDecimal(exactAgeInPlanetYears(planet, ageInSeconds), 2)
+function ageInPlanetYears(planet = "earth", ageInSeconds = 0) {
+  return ageInEarthYears(ageInSeconds) / earthYearsToPlanetYears[planet];
+}
