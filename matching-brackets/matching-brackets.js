@@ -1,27 +1,30 @@
-export const matchingBrackets = (str) => {
+const BRACKETS_PAIRS = {
+  "(": ")",
+  "[": "]",
+  "{": "}",
+};
+
+const OPENING_BRACKETS = Object.keys(BRACKETS_PAIRS);
+
+const CLOSING_BRACKETS = Object.values(BRACKETS_PAIRS);
+
+export function isPaired(string) {
   try {
-    return str.split('').reduce(readChar, []).length === 0
+    return string.split("").reduce(readChar, []).length === 0;
   } catch (error) {
-    return false
+    return false;
   }
 }
 
-const readChar = (buffer, char) => {
-  const [head, ...tail] = buffer
-  switch (char) {
-    case head:
-      return tail
-    case '}':
-    case ']':
-    case ')':
-      throw new Error('Invalid bracket')
-    case '{':
-      return ['}', ...buffer]
-    case '[':
-      return [']', ...buffer]
-    case '(':
-      return [')', ...buffer]
+const readChar = (bracketsBuffer, currentCharacter) => {
+  switch (true) {
+    case bracketsBuffer[0] === currentCharacter:
+      return bracketsBuffer.slice(1);
+    case OPENING_BRACKETS.includes(currentCharacter):
+      return [BRACKETS_PAIRS[currentCharacter], ...bracketsBuffer];
+    case CLOSING_BRACKETS.includes(currentCharacter):
+      throw new Error("invalid bracket");
     default:
-      return buffer
+      return bracketsBuffer;
   }
-}
+};
