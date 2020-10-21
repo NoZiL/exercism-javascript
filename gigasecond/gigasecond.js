@@ -1,3 +1,4 @@
-const GIGASECOND = Math.pow(10, 9)
+const GIGASECOND = Math.pow(10, 9);
 
-export const gigasecond = (moment) => new Date(moment.getTime() + GIGASECOND * 1000)
+export const gigasecond = (moment) =>
+  new Date(moment.getTime() + GIGASECOND * 1000);
